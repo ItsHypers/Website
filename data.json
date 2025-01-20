@@ -4,7 +4,9 @@
     "catch_method": "Single",
     "catch_location": "River",
     "date": "2024-08-09",
-    "categories": ["Hordes"]
+    "categories": ["Hordes"],
+    "description": "This catch was made in a beautiful lake.",
+    "tags": ["lake", "double", "trout"]
 },
 {
   "image": "images/rufflet.gif",
