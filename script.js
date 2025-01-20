@@ -53,12 +53,12 @@ fetch('data.json')
                 popup.style.left = `${rect.left + window.scrollX}px`;
                 popup.style.display = 'block';
 
-                // Set the popup data
+                // Set the popup data from the JSON item
                 const itemData = filteredData[img.dataset.index];
                 popupImg.src = itemData.image;
-                catchMethod.textContent = itemData.catchMethod;
-                catchLocation.textContent = itemData.catchLocation;
-                date.textContent = itemData.date;
+                catchMethod.textContent = `Catch Method: ${itemData.catchMethod}`;
+                catchLocation.textContent = `Catch Location: ${itemData.catchLocation}`;
+                date.textContent = `Date: ${itemData.date}`;
 
                 // Lower the opacity of other images
                 const images = document.querySelectorAll('.grid-item img');
