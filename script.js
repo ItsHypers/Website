@@ -1,56 +1,56 @@
-// Fetch the data from the JSON file
+// Load JSON file and populate the grid
 fetch('data.json')
-  .then(response => response.json())
-  .then(data => {
-    const grid = document.querySelector('.grid');
-    const popup = document.querySelector('.description-popup'); // The description popup that is above the grid
-    
-    data.forEach(item => {
-      // Create a grid item
-      const gridItem = document.createElement('div');
-      gridItem.classList.add('grid-item');
-      
-      // Create image container
-      const imageContainer = document.createElement('div');
-      imageContainer.classList.add('image-container');
-      
-      const image = document.createElement('img');
-      image.src = item.image;
-      image.classList.add('static-image');
-      image.alt = 'Image';
-      
-      const hoverImage = document.createElement('img');
-      hoverImage.src = "sparkle.gif"; // GIF that will appear on hover
-      hoverImage.classList.add('hover-image');
-      hoverImage.alt = 'Sparkle Effect';
-      
-      imageContainer.appendChild(image);
-      imageContainer.appendChild(hoverImage);
-      
-      // Append elements to the grid item
-      gridItem.appendChild(imageContainer);
-      grid.appendChild(gridItem);
-      
-      // Show the popup with description on hover
-      gridItem.addEventListener('mouseenter', (event) => {
-        const rect = event.target.getBoundingClientRect(); // Get the position of the hovered item
-        const popupContent = `
-          <strong>Catch Method:</strong> ${item.catchMethod}<br>
-          <strong>Catch Location:</strong> ${item.catchLocation}<br>
-          <strong>Date:</strong> ${item.date}
-        `;
-        
-        // Set the popup content
-        popup.innerHTML = popupContent;
-        
-        // Position the popup below the hovered image (relative to viewport)
-        popup.style.display = 'block';
-        popup.style.top = `${rect.bottom + window.scrollY + 10}px`; // 10px padding below
-        popup.style.left = `${rect.left + window.scrollX}px`; // Align with the left of the image
-      });
-      
-      gridItem.addEventListener('mouseleave', () => {
-        popup.style.display = 'none'; // Hide the popup when not hovering
-      });
-    });
-  });
+    .then(response => response.json())
+    .then(data => {
+        let imagesContainer = document.querySelector('.grid');
+        let categoryDropdown = document.querySelector('.category-dropdown select');
+
+        // Get unique categories
+        let categories = ['All', ...new Set(data.map(item => item.category))];
+
+        // Populate the dropdown with categories dynamically
+        categories.forEach(category => {
+            let option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categoryDropdown.appendChild(option);
+        });
+
+        // Function to render images based on the selected category
+        function renderImages(category) {
+            imagesContainer.innerHTML = ''; // Clear the existing images
+            let filteredImages = data.filter(item => category === 'All' || item.category === category);
+
+            filteredImages.forEach(item => {
+                let gridItem = document.createElement('div');
+                gridItem.classList.add('grid-item');
+
+                let imageContainer = document.createElement('div');
+                imageContainer.classList.add('image-container');
+
+                // Static Image
+                let staticImage = document.createElement('img');
+                staticImage.src = item.image;
+                staticImage.classList.add('static-image');
+
+                // Hover Image (GIF)
+                let hoverImage = document.createElement('img');
+                hoverImage.src = 'sparkle.gif';  // Assuming the gif file is named 'sparkle.gif'
+                hoverImage.classList.add('hover-image');
+
+                imageContainer.appendChild(staticImage);
+                imageContainer.appendChild(hoverImage);
+                gridItem.appendChild(imageContainer);
+                imagesContainer.appendChild(gridItem);
+            });
+        }
+
+        // Initial render of all images
+        renderImages('All');
+
+        // Filter images when the dropdown value changes
+        categoryDropdown.addEventListener('change', (e) => {
+            renderImages(e.target.value);
+        });
+    })
+    .catch(error => console.error('Error loading the data:', error));
