@@ -1,0 +1,21 @@
+[
+  {
+    "image": "images/persian.gif",
+    "catchMethod": "Catch Method 1",
+    "catchLocation": "Location 1",
+    "date": "2025-01-01"
+  },
+  {
+    "image": "images/staryu.gif",
+    "catchMethod": "Catch Method 2",
+    "catchLocation": "Location 2",
+    "date": "2025-01-02"
+  },  
+  {
+    "image": "images/vulpix.gif",
+    "catchMethod": "Catch Method 3",
+    "catchLocation": "Location 3",
+    "date": "2025-01-03"
+  }
+  
+]
