@@ -1,72 +1,87 @@
+// Select the grid and filter elements
+const grid = document.querySelector('.grid');
+const categoryFilter = document.getElementById('categoryFilter');
+const popup = document.getElementById('popup');
+const popupImg = document.getElementById('popup-img');
+const catchMethod = document.getElementById('catch-method');
+const catchLocation = document.getElementById('catch-location');
+const date = document.getElementById('date');
+const youtubeLinkSection = document.getElementById('youtube-link-section');
+
+// Fetch the data from the JSON file
 fetch('data.json')
-    .then(response => response.json())
-    .then(data => {
-        let imagesContainer = document.querySelector('.grid');
-        let categoryDropdown = document.querySelector('.category-dropdown select');
+  .then(response => response.json())
+  .then(data => {
+    // Function to populate the grid with images
+    function populateGrid(filteredData) {
+        grid.innerHTML = ''; // Clear the grid before repopulating
+        filteredData.forEach(item => {
+            const gridItem = document.createElement('div');
+            gridItem.classList.add('grid-item');
+            const img = document.createElement('img');
+            img.src = item.image;
+            img.alt = 'Image';
+            img.dataset.index = filteredData.indexOf(item); // Store the index for later use
 
-        // Get unique categories from all the images
-        let categories = [...new Set(data.flatMap(item => item.categories))]; // Remove duplicate categories
+            gridItem.appendChild(img);
+            grid.appendChild(gridItem);
 
-        // Add "All" as the first category
-        categories.unshift("All");
+            // Hover effect to show popup and handle opacity
+            img.addEventListener('mouseenter', () => {
+                // Display the popup below the hovered image
+                const rect = img.getBoundingClientRect();
+                popup.style.top = `${rect.bottom + window.scrollY + 10}px`;
+                popup.style.left = `${rect.left + window.scrollX}px`;
+                popup.style.display = 'block';
 
-        // Populate the dropdown with categories dynamically
-        categories.forEach(category => {
-            // Only add the "All" category once
-            if (!categoryDropdown.querySelector(`option[value="${category}"]`)) {
-                let option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                categoryDropdown.appendChild(option);
-            }
-        });
+                // Set the popup data
+                const itemData = filteredData[img.dataset.index];
+                popupImg.src = itemData.image;
+                catchMethod.textContent = itemData.catchMethod;
+                catchLocation.textContent = itemData.catchLocation;
+                date.textContent = itemData.date;
 
-        // Function to render images based on the selected category
-        function renderImages(selectedCategories) {
-            imagesContainer.innerHTML = ''; // Clear existing images
-            let filteredImages;
+                // Handle YouTube link if available
+                if (itemData.youtubeLink) {
+                    youtubeLinkSection.innerHTML = `<a href="${itemData.youtubeLink}" target="_blank">Watch on YouTube</a>`;
+                } else {
+                    youtubeLinkSection.innerHTML = '';
+                }
 
-            // If "All" is selected, show all images
-            if (selectedCategories.includes("All")) {
-                filteredImages = data;
-            } else {
-                // Filter images based on selected categories
-                filteredImages = data.filter(item => 
-                    selectedCategories.some(category => item.categories.includes(category))
-                );
-            }
+                // Lower the opacity of other images
+                const images = document.querySelectorAll('.grid-item img');
+                images.forEach(otherImage => {
+                    if (otherImage !== img) {
+                        otherImage.style.opacity = '0.33';
+                    }
+                });
 
-            // Render filtered images
-            filteredImages.forEach(item => {
-                let gridItem = document.createElement('div');
-                gridItem.classList.add('grid-item');
-
-                let imageContainer = document.createElement('div');
-                imageContainer.classList.add('image-container');
-
-                // Static Image
-                let staticImage = document.createElement('img');
-                staticImage.src = item.image;  // The image path from JSON
-                staticImage.classList.add('static-image');
-
-                // Hover Image (GIF)
-                let hoverImage = document.createElement('img');
-                hoverImage.src = 'sparkle.gif';  // Assuming the gif file is named 'sparkle.gif'
-                hoverImage.classList.add('hover-image');
-
-                imageContainer.appendChild(staticImage);
-                imageContainer.appendChild(hoverImage);
-                gridItem.appendChild(imageContainer);
-                imagesContainer.appendChild(gridItem);
+                // Scale up the hovered image
+                img.style.transform = 'scale(1.1)';
             });
-        }
 
-        // Initial render of all images
-        renderImages(['All']);
-
-        // Filter images when the dropdown value changes
-        categoryDropdown.addEventListener('change', (e) => {
-            renderImages([e.target.value]);
+            img.addEventListener('mouseleave', () => {
+                // Hide the popup and reset styles
+                popup.style.display = 'none';
+                const images = document.querySelectorAll('.grid-item img');
+                images.forEach(otherImage => {
+                    otherImage.style.opacity = '1';
+                    otherImage.style.transform = 'scale(1)';
+                });
+            });
         });
-    })
-    .catch(error => console.error('Error loading the data:', error));
+    }
+
+    // Initial population of the grid
+    populateGrid(data);
+
+    // Handle category filter
+    categoryFilter.addEventListener('change', () => {
+        const selectedCategory = categoryFilter.value;
+        const filteredData = data.filter(item => item.categories.includes(selectedCategory) || selectedCategory === 'all');
+        populateGrid(filteredData);
+    });
+  })
+  .catch(error => {
+    console.error('Error loading the data:', error);
+  });

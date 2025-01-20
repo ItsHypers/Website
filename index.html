@@ -3,24 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
+    <title>Image Grid</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <div class="header">
-        <h1>ItsHyper's Shiny Dex</h1>
-    </div>
+    <header>
+        <h1>Hyper's Shiny Dex</h1>
+    </header>
 
     <div class="category-dropdown">
-        <label for="category-select">Filter by Category: </label>
-        <select id="category-select">
-            <!-- Categories will be populated here dynamically -->
-        </select>
+        <select id="categoryFilter">
+            <option value="all">All</option>
+            <option value="singles">Singles</option>
+          </select>
+          
     </div>
 
     <div class="grid">
-        <!-- Images will be populated here dynamically -->
+        <!-- The images will be dynamically generated here from the data.json -->
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <div id="popup-image">
+                <img id="popup-img" src="" alt="Image">
+            </div>
+            <div id="popup-description">
+                <p><strong>Catch Method:</strong> <span id="catch-method"></span></p>
+                <p><strong>Catch Location:</strong> <span id="catch-location"></span></p>
+                <p><strong>Date:</strong> <span id="date"></span></p>
+                <p id="youtube-link-section"></p>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
