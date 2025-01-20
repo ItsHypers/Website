@@ -1,23 +1,23 @@
 [
   {
       "image": "images/persian.gif",
-      "catchMethod": "Single",
-      "catchLocation": "Location 1",
+      "catch_method": "Single",
+      "catch_location": "River",
       "date": "2025-01-01",
-      "category": "Singles"
+      "categories": ["Singles"]
   },
   {
       "image": "images/staryu.gif",
-      "catchMethod": "Single",
-      "catchLocation": "Location 2",
-      "date": "2025-02-01",
-      "category": "Singles"
+      "catch_method": "Double",
+      "catch_location": "Ocean",
+      "date": "2025-01-02",
+      "categories": ["Singles", "Secret"]
   },
   {
       "image": "images/vulpix.gif",
-      "catchMethod": "Horde",
-      "catchLocation": "Location 3",
-      "date": "2025-03-01",
-      "category": "hordes"
+    "catch_method": "Single",
+    "catch_location": "Lake",
+    "date": "2025-01-03",
+    "categories": ["Hordes"]
   }
 ]
