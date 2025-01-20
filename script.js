@@ -6,12 +6,31 @@ const popupImg = document.getElementById('popup-img');
 const catchMethod = document.getElementById('catch-method');
 const catchLocation = document.getElementById('catch-location');
 const date = document.getElementById('date');
-const youtubeLinkSection = document.getElementById('youtube-link-section');
 
 // Fetch the data from the JSON file
 fetch('data.json')
   .then(response => response.json())
   .then(data => {
+    // Extract all unique categories from the data
+    const categories = new Set();
+    data.forEach(item => {
+      item.categories.forEach(category => categories.add(category));
+    });
+
+    // Add "All" option to the dropdown
+    const allOption = document.createElement('option');
+    allOption.value = 'all';
+    allOption.textContent = 'All';
+    categoryFilter.appendChild(allOption);
+
+    // Create the category filter dropdown options
+    categories.forEach(category => {
+      const option = document.createElement('option');
+      option.value = category;
+      option.textContent = category;
+      categoryFilter.appendChild(option);
+    });
+
     // Function to populate the grid with images
     function populateGrid(filteredData) {
         grid.innerHTML = ''; // Clear the grid before repopulating
@@ -41,13 +60,6 @@ fetch('data.json')
                 catchLocation.textContent = itemData.catchLocation;
                 date.textContent = itemData.date;
 
-                // Handle YouTube link if available
-                if (itemData.youtubeLink) {
-                    youtubeLinkSection.innerHTML = `<a href="${itemData.youtubeLink}" target="_blank">Watch on YouTube</a>`;
-                } else {
-                    youtubeLinkSection.innerHTML = '';
-                }
-
                 // Lower the opacity of other images
                 const images = document.querySelectorAll('.grid-item img');
                 images.forEach(otherImage => {
@@ -72,7 +84,7 @@ fetch('data.json')
         });
     }
 
-    // Initial population of the grid
+    // Initial population of the grid with "all" category
     populateGrid(data);
 
     // Handle category filter
